@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.passiveObjects.Ewok;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +20,7 @@ public class EwokTest {
 
     @BeforeEach
     public void setUp(){
-        ewok = new Ewok();
+        ewok = new Ewok(0);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class EwokTest {
     }
 
     @Test
-    public void testRelease()(){
+    public void testRelease(){
         assertTrue(ewok.getAvailable());
         ewok.acquire();
         assertFalse(ewok.getAvailable());

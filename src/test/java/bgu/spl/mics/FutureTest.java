@@ -32,7 +32,7 @@ public class FutureTest {
     @Test
     public void testGet(){
 
-        string str = "abcdefghijlmnopqrstuvwxyz";
+        String str = "abcdefghijlmnopqrstuvwxyz";
         future.resolve(str);
         assertTrue(str.compareTo(future.get()) == 0);
     }

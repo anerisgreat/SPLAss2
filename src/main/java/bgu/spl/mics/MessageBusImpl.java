@@ -6,8 +6,14 @@ package bgu.spl.mics;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	
-	
+	private static MessageBus msgBus;
+
+	public static MessageBus getInstance() {
+		if (msgBus == null) {
+			msgBus = new MessageBusImpl();
+		}
+		return msgBus;
+ 	}
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		
@@ -27,7 +33,6 @@ public class MessageBusImpl implements MessageBus {
 	public void sendBroadcast(Broadcast b) {
 		
 	}
-
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
