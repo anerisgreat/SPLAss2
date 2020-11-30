@@ -16,7 +16,9 @@ public class MessageBusTest {
     private MicroService ms;
     private MicroService OtherMs;
     private AttackEvent ae;
+    private AttackEvent otherAe;
     private BCast bc;
+
     @BeforeEach
     public void setUp(){
         msgBus = MessageBusImpl.getInstance();
@@ -24,6 +26,8 @@ public class MessageBusTest {
         OtherMs = new HanSoloMicroservice();
         ae = new AttackEvent();
         bc = new BCast();
+        otherAe = new AttackEvent();
+
     }
 
     @Test
@@ -87,19 +91,14 @@ public class MessageBusTest {
         msgBus.register(ms);
         msgBus.subscribeEvent(ae.getClass(), ms);
         msgBus.sendEvent(ae);
+        msgBus.sendEvent(otherAe);
         Message m;
+        msgBus.complete(otherAe, true);
         try {
             m = msgBus.awaitMessage(ms);
-            assertEquals(m, ae);
+            assertEquals(ae, m);
         } catch (Exception e) {
             assert false;
-        }
-        msgBus.complete(ae, true);
-        try {
-            m = msgBus.awaitMessage(OtherMs);
-            assert false;
-        } catch (Exception e) {
-            assert true;
         }
         msgBus.unregister(ms);
     }
