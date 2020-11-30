@@ -28,15 +28,7 @@ public class MessageBusTest {
 
     @Test
     public void testRegister(){
-        msgBus.subscribeEvent(ae.getClass(), ms);
-        msgBus.sendEvent(ae);
         Message m;
-        try {
-            m = msgBus.awaitMessage(ms);
-            assert false;
-        } catch (Exception e) {
-            assert true;
-        }
         msgBus.register(ms);
         msgBus.subscribeEvent(ae.getClass(), ms);
         msgBus.sendEvent(ae);
@@ -57,16 +49,13 @@ public class MessageBusTest {
         msgBus.register(OtherMs);
         Message m;
         msgBus.subscribeEvent(ae.getClass(), ms);
+        msgBus.subscribeEvent(ae.getClass(), OtherMs);
         msgBus.sendEvent(ae);
         try {
-            m = msgBus.awaitMessage(ms);
-            assertEquals(m, ae);
-        } catch (Exception e) {
-            assert false;
-        }
-        try {
             m = msgBus.awaitMessage(OtherMs);
-            assert false;
+            assertEquals(ae, m);
+            m = msgBus.awaitMessage(ms);
+            assertEquals(ae, m);
         } catch (Exception e) {
             assert true;
         }
@@ -80,18 +69,15 @@ public class MessageBusTest {
         msgBus.register(OtherMs);
         Message m;
         msgBus.subscribeBroadcast(bc.getClass(), ms);
+        msgBus.subscribeBroadcast(bc.getClass(), OtherMs);
         msgBus.sendBroadcast(bc);
         try {
             m = msgBus.awaitMessage(ms);
             assertEquals(m, bc);
-        } catch (Exception e) {
-            assert false;
-        }
-        try {
             m = msgBus.awaitMessage(OtherMs);
-            assert false;
+            assertEquals(m, bc);
         } catch (Exception e) {
-            assert true;
+            assert false;
         }
         msgBus.unregister(ms);
         msgBus.unregister(OtherMs);
@@ -123,19 +109,16 @@ public class MessageBusTest {
         msgBus.register(ms);
         msgBus.register(OtherMs);
         msgBus.subscribeBroadcast(bc.getClass(), ms);
+        msgBus.subscribeBroadcast(bc.getClass(), OtherMs);
         msgBus.sendBroadcast(bc);
         Message m;
         try {
             m = msgBus.awaitMessage(ms);
             assertEquals(m, bc);
+            m = msgBus.awaitMessage(OtherMs);
+            assertEquals(m, bc);
         } catch (Exception e) {
             assert false;
-        }
-        try {
-            msgBus.awaitMessage(OtherMs);
-            assert false;
-        } catch (Exception e) {
-            assert true;
         }
         msgBus.unregister(ms);
         msgBus.unregister(OtherMs);
@@ -146,19 +129,16 @@ public class MessageBusTest {
         msgBus.register(ms);
         msgBus.register(OtherMs);
         msgBus.subscribeEvent(ae.getClass(), ms);
+        msgBus.subscribeEvent(ae.getClass(), OtherMs);
         msgBus.sendEvent(ae);
         Message m;
         try {
             m = msgBus.awaitMessage(ms);
             assertEquals(m, ae);
+            m = msgBus.awaitMessage(OtherMs);
+            assertEquals(m, ae);
         } catch (Exception e) {
             assert false;
-        }
-        try {
-            msgBus.awaitMessage(OtherMs);
-            assert false;
-        } catch (Exception e) {
-            assert true;
         }
         msgBus.unregister(ms);
         msgBus.unregister(OtherMs);
@@ -179,7 +159,7 @@ public class MessageBusTest {
           m = msgBus.awaitMessage(ms);
           assertEquals(m, ae);
           m = msgBus.awaitMessage(OtherMs);
-           assertEquals(m, bc);
+          assertEquals(m, bc);
        }
        catch (Exception e) {
            assert false;
