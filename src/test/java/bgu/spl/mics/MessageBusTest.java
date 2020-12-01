@@ -100,7 +100,7 @@ public class MessageBusTest {
         Message m;
         try {
             m = msgBus.awaitMessage(ms);
-            msgBus.complete(m, true);
+            msgBus.complete((AttackEvent)m, true);
             assertEquals(ae, m);
             assert(f.isDone());
             assert(f.get());
