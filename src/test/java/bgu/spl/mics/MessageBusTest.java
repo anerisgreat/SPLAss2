@@ -32,6 +32,8 @@ public class MessageBusTest {
 
     @Test
     public void testRegister(){
+        //We check if a simple register and sending of event
+        //works
         Message m;
         msgBus.register(ms);
         msgBus.subscribeEvent(ae.getClass(), ms);
@@ -49,13 +51,15 @@ public class MessageBusTest {
 
     @Test
     public void testSubscribeEvent(){
+        //Check if, despite two registered microservices,
+        //correct microservice collects the intended message.
         msgBus.register(ms);
         msgBus.register(OtherMs);
         Message m;
         msgBus.subscribeEvent(ae.getClass(), ms);
         msgBus.sendEvent(ae);
         try {
-            m = msgBus.awaitMessage(OtherMs);
+            m = msgBus.awaitMessage(ms);
             assertEquals(ae, m);
         } catch (Exception e) {
             assert true;
@@ -66,6 +70,8 @@ public class MessageBusTest {
 
     @Test
     public void testSubscribeBroadcast() {
+        //Checking if two microservices get same broadcast
+        //event
         msgBus.register(ms);
         msgBus.register(OtherMs);
         Message m;
@@ -83,17 +89,21 @@ public class MessageBusTest {
         msgBus.unregister(ms);
         msgBus.unregister(OtherMs);
     }
+
     @Test
     public void testComplete(){
+        //Testing complete
         msgBus.register(ms);
         msgBus.subscribeEvent(ae.getClass(), ms);
-        msgBus.sendEvent(ae);
-        msgBus.sendEvent(otherAe);
+        Future<Boolean> f = msgBus.sendEvent(ae);
+        assert(!f.isDone());
         Message m;
-        msgBus.complete(otherAe, true);
         try {
             m = msgBus.awaitMessage(ms);
+            msgBus.complete(m, true);
             assertEquals(ae, m);
+            assert(f.isDone());
+            assert(f.get());
         } catch (Exception e) {
             assert false;
         }
@@ -133,7 +143,6 @@ public class MessageBusTest {
             assert false;
         }
         msgBus.unregister(ms);
-        msgBus.unregister(OtherMs);
     }
 
 
