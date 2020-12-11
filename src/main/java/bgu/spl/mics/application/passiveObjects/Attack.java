@@ -20,4 +20,8 @@ public class Attack {
         this.serials = serialNumbers;
         this.duration = duration;
     }
+
+    public int getDuration() {
+        return duration;
+    }
 }
