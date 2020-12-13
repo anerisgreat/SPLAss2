@@ -32,24 +32,26 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		while(!this.isDone){
-            try{
-                this.lockObject.wait();
-            } catch(Exception e){
-                //Do nothing. Interrupt exception.
+        synchronized(lockObject){
+            while(!this.isDone){
+                try{
+                    this.lockObject.wait();
+                }catch(InterruptedException e){}
             }
+
+            return this.result;
         }
-            
-        return this.result;
 	}
 	
 	/**
      * Resolves the result of this Future object.
      */
 	public void resolve (T result) {
-        this.result = result;
-        this.isDone = true;
-        this.lockObject.notifyAll();
+        synchronized(lockObject){
+            this.result = result;
+            this.isDone = true;
+            this.lockObject.notifyAll();
+        }
 	}
 	
 	/**
@@ -71,8 +73,25 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		
-        return null;
+        Object timeoutObj = new Object();
+        new Thread(() -> {
+                try{
+                    unit.sleep(timeout);
+                    synchronized(lockObject){
+                        this.lockObject.notifyAll();
+                    }
+                }
+                catch(InterruptedException e){
+                    //Do nothing
+                }
+        }).start();
+
+        synchronized(this.lockObject){
+            try{
+                this.lockObject.wait();
+            }catch(InterruptedException e){}
+            return this.result;
+        }
 	}
 
 }
