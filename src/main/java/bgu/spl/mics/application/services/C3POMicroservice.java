@@ -1,6 +1,14 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Event;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.DeactivationEvent;
+import bgu.spl.mics.application.messages.TerminationBroadcast;
+import bgu.spl.mics.application.passiveObjects.Attack;
+import bgu.spl.mics.application.passiveObjects.Diary;
+
+import bgu.spl.mics.application.passiveObjects.Ewoks;
 
 
 /**
@@ -12,13 +20,33 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class C3POMicroservice extends MicroService {
-	
-    public C3POMicroservice() {
+
+    private Diary diary;
+    private Ewoks ewoks;
+
+    public C3POMicroservice(Diary diary) {
         super("C3PO");
+        this.diary = diary;
+        ewoks = Ewoks.getInstance();
     }
 
     @Override
     protected void initialize() {
-
+        subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            diary.setC3POTerminate(System.currentTimeMillis());
+            terminate();
+        });
+        subscribeEvent(AttackEvent.class, (c) -> {
+            try {
+                ewoks.acquire(c.getSerials());
+                Thread.sleep(c.getDuration());
+                diary.setTotalAttacks();
+                complete(c, true);
+                diary.setC3POFinish(System.currentTimeMillis());
+                ewoks.release(c.getSerials());
+            } catch (InterruptedException e) {
+                //not sure...
+            }
+        });
     }
 }
