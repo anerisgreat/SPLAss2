@@ -13,24 +13,59 @@ import java.util.List;
  */
 public class Ewoks {
     private static Ewoks ewoks;
-    private List<Ewok> ewokList;//need to make sure list is ordered by serialNumber
+    private static int numEwoks;
+    private Ewok[] ewokArr;//need to make sure list is ordered by serialNumber
 
-    public static Ewoks getInstance() {
+    public static void setNumEwoks(int n){
+        numEwoks = n;
+    }
+
+    public synchronized static Ewoks getInstance() {
         if (ewoks == null) {
             ewoks = new Ewoks();
         }
         return ewoks;
     }
 
-    public void acquire(int i) {
-        ewokList.get(i).acquire();
+    private Ewoks(){
+        ewokArr = new Ewok[numEwoks];
+        for(int i = 0; i < numEwoks; ++i){
+            ewokArr[i] = new Ewok(i+1);
+        }
     }
 
-    public void release(int i) {
-        ewokList.get(i).release();
+    public void acquire(Collection<int> toAcquire) {
+        synchronized(ewokArr){
+            bool isAvailable = true;
+            int cSize - toAcquire.size();
+            do{
+                isAvailable = true;
+
+                for(int index: toAcquire){
+                    isAvailable = ewokArr[index - 1].isAvailable();
+                    if(!isAvailable){
+                        break;
+                    }
+                }
+
+                if(!isAvailable){
+                    ewokArr.wait();
+                }
+            }while(!isAvailable);
+
+            for(int index: toAcquire){
+                ewokArr[index - 1].acquire();
+            }
+        }
     }
 
-    public boolean getAvailable(int i) {
-        return ewokList.get(i).getAvailable();
+    public void release(Collection<int> toRelease) {
+        synchronized(ewokArr){
+            for(int index: toAcquire){
+                ewokArr[index - 1].release();
+            }
+
+            ewokArr[i].notifyAll();
+        }
     }
 }
