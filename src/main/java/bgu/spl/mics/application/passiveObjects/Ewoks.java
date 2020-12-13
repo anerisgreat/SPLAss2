@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,15 +35,15 @@ public class Ewoks {
         }
     }
 
-    public void acquire(Collection<int> toAcquire) {
+    public void acquire(Collection<Integer> toAcquire){
         synchronized(ewokArr){
-            bool isAvailable = true;
-            int cSize - toAcquire.size();
+            boolean isAvailable = true;
+            int cSize = toAcquire.size();
             do{
                 isAvailable = true;
 
                 for(int index: toAcquire){
-                    isAvailable = ewokArr[index - 1].isAvailable();
+                    isAvailable = ewokArr[index - 1].getAvailable();
                     if(!isAvailable){
                         break;
                     }
@@ -59,13 +60,13 @@ public class Ewoks {
         }
     }
 
-    public void release(Collection<int> toRelease) {
+    public void release(Collection<Integer> toRelease) {
         synchronized(ewokArr){
-            for(int index: toAcquire){
+            for(int index: toRelease){
                 ewokArr[index - 1].release();
             }
 
-            ewokArr[i].notifyAll();
+            ewokArr.notifyAll();
         }
     }
 }
