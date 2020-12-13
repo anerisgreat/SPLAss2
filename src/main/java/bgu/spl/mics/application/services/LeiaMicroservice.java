@@ -30,6 +30,7 @@ public class LeiaMicroservice extends MicroService {
     public LeiaMicroservice(Attack[] attacks, Diary diary) {
         super("Leia");
 		this.attacks = attacks;
+        this.diary = diary;
     }
 
     @Override
