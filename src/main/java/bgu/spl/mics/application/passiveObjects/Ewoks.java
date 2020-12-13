@@ -50,7 +50,10 @@ public class Ewoks {
                 }
 
                 if(!isAvailable){
-                    ewokArr.wait();
+                    try{
+                        ewokArr.wait();
+                    }
+                    catch(InterruptedException e){}
                 }
             }while(!isAvailable);
 
