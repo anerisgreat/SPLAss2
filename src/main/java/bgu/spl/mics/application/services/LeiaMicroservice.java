@@ -31,6 +31,7 @@ public class LeiaMicroservice extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            diary.setLeiaTerminate(System.currentTimeMillis());
             terminate();
         });
     	for (Attack a : attacks) {

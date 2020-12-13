@@ -30,9 +30,14 @@ public class C3POMicroservice extends MicroService {
         ewoks = Ewoks.getInstance();
     }
 
+    public void updateFinished() {
+        diary.setC3POFinish(System.currentTimeMillis());
+    }
+
     @Override
     protected void initialize() {
         subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            diary.setC3POTerminate(System.currentTimeMillis());
             terminate();
         });
         subscribeEvent(AttackEvent.class, (c) -> {
@@ -41,6 +46,7 @@ public class C3POMicroservice extends MicroService {
                     ewoks.acquire(i);
                 }
                 Thread.sleep(c.getDuration());
+                diary.setTotalAttacks();
                 complete(c, true);
                 for(int i : c.getSerials()) {
                     ewoks.release(i);

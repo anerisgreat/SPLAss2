@@ -27,6 +27,7 @@ public class R2D2Microservice extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            diary.setR2D2Terminate(System.currentTimeMillis());
             terminate();
         });
         subscribeEvent(DeactivationEvent.class, (DeactivationEvent c) -> {
