@@ -33,11 +33,14 @@ public class Main {
             
             Diary d = new Diary();
 
-            new Thread(new C3POMicroservice(d)).run();
-            new Thread(new HanSoloMicroservice(d)).run();
-            new Thread(new LandoMicroservice(config.R2D2, d)).run();
-            new Thread(new LeiaMicroservice(config.attacks, d)).run();
-            new Thread(new R2D2Microservice(config.R2D2, d)).run();
+            new Thread(new C3POMicroservice(d)).start();
+            new Thread(new HanSoloMicroservice(d)).start();
+            new Thread(new LandoMicroservice(config.R2D2, d)).start();
+            new Thread(new R2D2Microservice(config.R2D2, d)).start();
+            try{
+                Thread.sleep(100);
+            }catch(Exception e){}
+            new Thread(new LeiaMicroservice(config.attacks, d)).start();
         }
 	}
 }
