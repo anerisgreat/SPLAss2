@@ -60,12 +60,10 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-    	if (hashMap.get(type) != null) {
+        if(!hashMap.contains(type)){
             hashMap.put(type, callback);
             MB.subscribeEvent(type, this);
         }
-
-    	//should we check if already subscribed?
     }
 
     /**
@@ -89,7 +87,7 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-    	if (hashMap.get(type) != null) {
+        if(!hashMap.contains(type)){
             hashMap.put(type, callback);
             MB.subscribeBroadcast(type, this);
         }
