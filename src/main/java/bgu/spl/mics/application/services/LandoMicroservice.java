@@ -32,6 +32,7 @@ public class LandoMicroservice  extends MicroService {
             try {
                 Thread.sleep(duration);
                 complete(c, true);
+                diary.setLandoTerminate(System.currentTimeMillis());
             } catch (InterruptedException e) {
                 //not sure...
             }
