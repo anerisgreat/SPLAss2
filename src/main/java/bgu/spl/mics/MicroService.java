@@ -164,16 +164,18 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
+        MB.register(this);
         initialize();
     	while (!term) {
             try {
                 Message mes = MB.awaitMessage(this);
                 hashMap.get(mes.getClass()).call(mes);
             } catch (InterruptedException e) {
-                // maybe nothing
+                //Maybe this is a good idea. If interrupted, exit?
+                term = true;
             }
         }
-
+        MB.unregister(this);
     }
 
 }
