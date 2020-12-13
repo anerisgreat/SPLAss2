@@ -24,4 +24,8 @@ public class Attack {
     public int getDuration() {
         return duration;
     }
+
+    public List<Integer> getSerials() {
+        return serials;
+    }
 }

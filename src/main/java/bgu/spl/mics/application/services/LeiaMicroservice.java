@@ -7,7 +7,9 @@ import bgu.spl.mics.MessageBus;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Attack;
+import bgu.spl.mics.application.passiveObjects.Diary;
 
 /**
  * LeiaMicroservices Initialized with Attack objects, and sends them as  {@link AttackEvents}.
@@ -19,18 +21,20 @@ import bgu.spl.mics.application.passiveObjects.Attack;
  */
 public class LeiaMicroservice extends MicroService {
 	private Attack[] attacks;
-	MessageBus MB;
+	private Diary diary;
 	
-    public LeiaMicroservice(Attack[] attacks) {
+    public LeiaMicroservice(Attack[] attacks, Diary diary) {
         super("Leia");
 		this.attacks = attacks;
-		MB = MessageBusImpl.getInstance();
     }
 
     @Override
     protected void initialize() {
+        subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            terminate();
+        });
     	for (Attack a : attacks) {
-    	    MB.sendEvent(new AttackEvent(a));
+    	    sendEvent(new AttackEvent(a));
         }
     }
 }

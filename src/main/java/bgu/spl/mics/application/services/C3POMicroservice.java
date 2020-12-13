@@ -4,8 +4,11 @@ import bgu.spl.mics.Event;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.messages.DeactivationEvent;
+import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.passiveObjects.Diary;
+
+import bgu.spl.mics.application.passiveObjects.Ewoks;
 
 
 /**
@@ -18,18 +21,30 @@ import bgu.spl.mics.application.passiveObjects.Diary;
  */
 public class C3POMicroservice extends MicroService {
 
-    Diary diary;
+    private Diary diary;
+    private Ewoks ewoks;
 
     public C3POMicroservice(Diary diary) {
         super("C3PO");
         this.diary = diary;
+        ewoks = Ewoks.getInstance();
     }
 
     @Override
     protected void initialize() {
+        subscribeBroadcast(TerminationBroadcast.class, (c) -> {
+            terminate();
+        });
         subscribeEvent(AttackEvent.class, (c) -> {
             try {
-                Thread.sleep(c.getDuration());//need to get the duration from the attack
+                for(int i : c.getSerials()) {
+                    ewoks.acquire(i);
+                }
+                Thread.sleep(c.getDuration());
+                complete(c, true);
+                for(int i : c.getSerials()) {
+                    ewoks.release(i);
+                }
             } catch (InterruptedException e) {
                 //not sure...
             }
