@@ -38,9 +38,7 @@ public class C3POMicroservice extends MicroService {
         });
         subscribeEvent(AttackEvent.class, (c) -> {
             try {
-                //this part needs to be fixed
                 ewoks.acquire(c.getSerials());
-                //
                 Thread.sleep(c.getDuration());
                 diary.setTotalAttacks();
                 complete(c, true);
