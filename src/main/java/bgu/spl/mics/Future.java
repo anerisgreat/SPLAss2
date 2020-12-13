@@ -13,12 +13,14 @@ import java.util.concurrent.TimeUnit;
 public class Future<T> {
 	private boolean isDone;
     private T result;
+    private Object lockObject;
 	
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
-		
+        this.isDone = false;
+        this.lockObject = new Object();
 	}
 	
 	/**
@@ -30,23 +32,31 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		
-        return null; 
+		while(!this.isDone){
+            try{
+                this.lockObject.wait();
+            } catch(Exception e){
+                //Do nothing. Interrupt exception.
+            }
+        }
+            
+        return this.result;
 	}
 	
 	/**
      * Resolves the result of this Future object.
      */
 	public void resolve (T result) {
-		
+        this.result = result;
+        this.isDone = true;
+        this.lockObject.notifyAll();
 	}
 	
 	/**
      * @return true if this object has been resolved, false otherwise
      */
 	public boolean isDone() {
-        //TODO: Implement
-		return false;
+        return this.isDone;
 	}
 	
 	/**
