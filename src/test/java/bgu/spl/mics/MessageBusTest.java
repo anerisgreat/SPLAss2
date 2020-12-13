@@ -1,11 +1,14 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.passiveObjects.Attack;
+import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.services.C3POMicroservice;
 import bgu.spl.mics.application.services.HanSoloMicroservice;
 import org.junit.jupiter.api.*;
 
 
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,12 +24,15 @@ public class MessageBusTest {
 
     @BeforeEach
     public void setUp(){
+        Diary d = new Diary();
+        LinkedList<Integer> list = new LinkedList<>();
+        list.add(1);
         msgBus = MessageBusImpl.getInstance();
-        ms = new C3POMicroservice();
-        OtherMs = new HanSoloMicroservice();
-        ae = new AttackEvent();
+        ms = new C3POMicroservice(d);
+        OtherMs = new HanSoloMicroservice(d);
+        ae = new AttackEvent(new Attack(list,100));
         bc = new BCast();
-        otherAe = new AttackEvent();
+        otherAe = new AttackEvent(new Attack(list, 200));
 
     }
 
