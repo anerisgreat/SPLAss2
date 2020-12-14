@@ -24,9 +24,9 @@ public class C3POMicroservice extends MicroService {
     private Diary diary;
     private Ewoks ewoks;
 
-    public C3POMicroservice(Diary diary) {
+    public C3POMicroservice() {
         super("C3PO");
-        this.diary = diary;
+        this.diary = Diary.getInstance();
         ewoks = Ewoks.getInstance();
     }
 

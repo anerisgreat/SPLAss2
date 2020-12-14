@@ -2,6 +2,8 @@ package bgu.spl.mics.application;
 
 import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+
 import com.google.gson.Gson;
 
 import bgu.spl.mics.application.AppConfig;
@@ -30,17 +32,24 @@ public class Main {
         if(config != null){
             //Setting up proper number of Ewoks
             Ewoks.setNumEwoks(config.Ewoks);
-            
-            Diary d = new Diary();
-
-            new Thread(new C3POMicroservice(d)).start();
-            new Thread(new HanSoloMicroservice(d)).start();
-            new Thread(new LandoMicroservice(config.R2D2, d)).start();
-            new Thread(new R2D2Microservice(config.R2D2, d)).start();
+            new Thread(new C3POMicroservice()).start();
+            new Thread(new HanSoloMicroservice()).start();
+            new Thread(new LandoMicroservice(config.R2D2)).start();
+            new Thread(new R2D2Microservice(config.R2D2)).start();
             try{
                 Thread.sleep(100);
             }catch(Exception e){}
-            new Thread(new LeiaMicroservice(config.attacks, d)).start();
+            new Thread(new LeiaMicroservice(config.attacks)).start();
         }
+
+        try {
+            FileWriter fw = new FileWriter(args[1]);
+            gson.toJson(Diary.getInstance(), fw);
+            fw.flush();
+            fw.close();
+        } catch (Exception e) {
+
+        }
+
 	}
 }

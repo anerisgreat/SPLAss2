@@ -16,10 +16,10 @@ public class LandoMicroservice  extends MicroService {
     private long duration;
     private Diary diary;
 
-    public LandoMicroservice(long duration, Diary diary) {
+    public LandoMicroservice(long duration) {
         super("Lando");
         this.duration = duration;
-        this.diary = diary;
+        this.diary = Diary.getInstance();
     }
 
     @Override
