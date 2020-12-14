@@ -5,6 +5,7 @@ import bgu.spl.mics.application.messages.BombDestroyerEvent;
 import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Diary;
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
 
 /**
  * LandoMicroservice
@@ -36,5 +37,6 @@ public class LandoMicroservice  extends MicroService {
                 //not sure...
             }
         });
+        SingletoneCountDownLatch.getInstance().countDown();
     }
 }

@@ -9,6 +9,7 @@ import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.passiveObjects.Diary;
 
 import bgu.spl.mics.application.passiveObjects.Ewoks;
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
 
 
 /**
@@ -48,5 +49,6 @@ public class C3POMicroservice extends MicroService {
                 //not sure...
             }
         });
+        SingletoneCountDownLatch.getInstance().countDown();
     }
 }

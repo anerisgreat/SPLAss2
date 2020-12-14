@@ -14,6 +14,7 @@ import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.passiveObjects.Diary;
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
 
 /**
  * LeiaMicroservices Initialized with Attack objects, and sends them as  {@link AttackEvents}.
@@ -35,6 +36,10 @@ public class LeiaMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
+        try {
+            SingletoneCountDownLatch.getInstance().wait();
+        } catch (Exception e) {
+        }
         List<Future> attackFutures = new LinkedList<>();
         Future shieldDeactivation;
         Future destroyed;
