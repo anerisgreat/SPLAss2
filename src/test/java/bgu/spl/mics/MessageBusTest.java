@@ -28,8 +28,8 @@ public class MessageBusTest {
         LinkedList<Integer> list = new LinkedList<>();
         list.add(1);
         msgBus = MessageBusImpl.getInstance();
-        ms = new C3POMicroservice(d);
-        OtherMs = new HanSoloMicroservice(d);
+        ms = new C3POMicroservice();
+        OtherMs = new HanSoloMicroservice();
         ae = new AttackEvent(new Attack(list,100));
         bc = new BCast();
         otherAe = new AttackEvent(new Attack(list, 200));

@@ -18,10 +18,10 @@ public class R2D2Microservice extends MicroService {
     private long duration;
     private Diary diary;
 
-    public R2D2Microservice(long duration, Diary diary) {
+    public R2D2Microservice(long duration) {
         super("R2D2");
         this.duration = duration;
-        this.diary = diary;
+        this.diary = Diary.getInstance();
     }
 
     @Override

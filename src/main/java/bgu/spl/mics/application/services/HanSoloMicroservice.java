@@ -20,9 +20,9 @@ public class HanSoloMicroservice extends MicroService {
     private Diary diary;
     private Ewoks ewoks;
 
-    public HanSoloMicroservice(Diary diary) {
+    public HanSoloMicroservice() {
         super("Han");
-        this.diary = diary;
+        this.diary = Diary.getInstance();
         ewoks = Ewoks.getInstance();
     }
 
