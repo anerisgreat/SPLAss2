@@ -45,9 +45,6 @@ public class LeiaMicroservice extends MicroService {
         //This is just for setup
         //Otherwise, two events might be sent to
         //same place.
-        try{
-            Thread.sleep(50);
-        }catch(Exception e){}
 
         //send attack events and store its future
     	for (Attack a : attacks) {

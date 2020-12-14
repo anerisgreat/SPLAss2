@@ -51,12 +51,17 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
         if(!eventToMicroServicesQueues.containsKey(type)){
-            eventToMicroServicesQueues.put(type, new ConcurrentLinkedQueue<MicroService>());
+            synchronized(eventToMicroServicesQueues){
+                //Check again in case by time entered synchronized block, other thread instantiated.
+                if(!eventToMicroServicesQueues.containsKey(type)){
+                    eventToMicroServicesQueues.put(type, new ConcurrentLinkedQueue<MicroService>());
+                }
+            }
         }
 
         //Adding it to queue for receiving messages
         ConcurrentLinkedQueue<MicroService> microServiceQueue = eventToMicroServicesQueues.get(type);
-        synchronized(microServiceQueue ){
+        synchronized(microServiceQueue){
             if(!microServiceQueue.contains(m)){
                 //Add it to round robin queue, so it may get messages of this type.
                 microServiceQueue.add(m);
@@ -79,7 +84,12 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
         if(!broadcastToMicroServicesList.containsKey(type)){
-            broadcastToMicroServicesList.put(type, new LinkedList<MicroService>());
+            synchronized(broadcastToMicroServicesList){
+                //Check again, in case by the time we enter block, other thread instantiated.
+                if(!broadcastToMicroServicesList.containsKey(type)){
+                    broadcastToMicroServicesList.put(type, new LinkedList<MicroService>());
+                }
+            }
         }
 
         List<MicroService> broadcastList = broadcastToMicroServicesList.get(type);
@@ -132,8 +142,27 @@ public class MessageBusImpl implements MessageBus {
 	public <T> Future<T> sendEvent(Event<T> e) {
         MicroService mService;
         //Get round-robin queue.
-        ConcurrentLinkedQueue<MicroService> mServiceQueue = eventToMicroServicesQueues.get(e.getClass());
+
+        Class type = e.getClass();
+
+        if(!eventToMicroServicesQueues.containsKey(type)){
+            synchronized(eventToMicroServicesQueues){
+                //Check again in case by time entered synchronized block, other thread instantiated.
+                if(!eventToMicroServicesQueues.containsKey(type)){
+                    eventToMicroServicesQueues.put(type, new ConcurrentLinkedQueue<MicroService>());
+                }
+            }
+        }
+
+        ConcurrentLinkedQueue<MicroService> mServiceQueue = eventToMicroServicesQueues.get(type);
+
         synchronized(mServiceQueue){
+            //We wait until someone is subscribed. Otherwise, we could not send the message!
+            while(mServiceQueue.size() == 0){
+                try{
+                    mServiceQueue.wait();
+                }catch(InterruptedException ex){}
+            }
             //Retrieving microservice and adding to back.
             mService = mServiceQueue.poll();
             mServiceQueue.add(mService);

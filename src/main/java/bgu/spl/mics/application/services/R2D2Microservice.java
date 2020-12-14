@@ -36,7 +36,8 @@ public class R2D2Microservice extends MicroService {
                 diary.setR2D2Deactivate(System.currentTimeMillis());
                 complete(c, true);
             } catch (InterruptedException e) {
-                //not sure...
+                System.out.println("Error with this R2 unit. Should have gotten the orange droid.");
+                sendBroadcast(new TerminationBroadcast());
             }
         });
     }

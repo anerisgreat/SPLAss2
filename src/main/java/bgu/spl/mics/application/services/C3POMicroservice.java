@@ -45,7 +45,8 @@ public class C3POMicroservice extends MicroService {
                 diary.setC3POFinish(System.currentTimeMillis());
                 ewoks.release(c.getSerials());
             } catch (InterruptedException e) {
-                //not sure...
+                System.out.println("Error with C3PO. Terminating.");
+                sendBroadcast(new TerminationBroadcast());
             }
         });
     }

@@ -33,7 +33,8 @@ public class LandoMicroservice  extends MicroService {
                 Thread.sleep(duration);
                 complete(c, true);
             } catch (InterruptedException e) {
-                //not sure...
+                System.out.println("Error with Lando. He was working with Vader all along!");
+                sendBroadcast(new TerminationBroadcast());
             }
         });
     }

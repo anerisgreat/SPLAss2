@@ -41,7 +41,8 @@ public class HanSoloMicroservice extends MicroService {
                 diary.setHanSoloFinish(System.currentTimeMillis());
                 ewoks.release(c.getSerials());
             } catch (InterruptedException e) {
-                //not sure...
+                System.out.println("Error with Prince Lonestar. Terminating.");
+                sendBroadcast(new TerminationBroadcast());
             }
         });
     }
