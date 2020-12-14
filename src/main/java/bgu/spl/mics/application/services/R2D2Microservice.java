@@ -4,6 +4,7 @@ import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Diary;
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
 
 /**
  * R2D2Microservices is in charge of the handling {@link DeactivationEvent}.
@@ -40,5 +41,6 @@ public class R2D2Microservice extends MicroService {
                 sendBroadcast(new TerminationBroadcast());
             }
         });
+        SingletoneCountDownLatch.getInstance().countDown();
     }
 }

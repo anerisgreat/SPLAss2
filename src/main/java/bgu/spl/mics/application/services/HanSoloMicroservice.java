@@ -7,6 +7,7 @@ import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminationBroadcast;
 import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.passiveObjects.Ewoks;
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
 
 /**
  * HanSoloMicroservices is in charge of the handling {@link AttackEvents}.
@@ -45,5 +46,6 @@ public class HanSoloMicroservice extends MicroService {
                 sendBroadcast(new TerminationBroadcast());
             }
         });
+        SingletoneCountDownLatch.getInstance().countDown();
     }
 }
