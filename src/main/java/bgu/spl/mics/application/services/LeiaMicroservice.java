@@ -37,7 +37,7 @@ public class LeiaMicroservice extends MicroService {
     @Override
     protected void initialize() {
         try {
-            SingletoneCountDownLatch.getInstance().wait();
+            SingletoneCountDownLatch.getInstance().await();
         } catch (InterruptedException e) {
             System.out.println("Error in waiting for setup. Terimnating all.");
             sendBroadcast(new TerminationBroadcast());
