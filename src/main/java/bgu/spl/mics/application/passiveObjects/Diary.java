@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Diary {
     private static Diary diary;
-    public static Diary getInstance() {
+    public static synchronized Diary getInstance() {
         if (diary == null) {
             diary = new Diary();
         }
@@ -28,7 +28,7 @@ public class Diary {
     private long R2D2Terminate;
     private long LandoTerminate;
 
-    public Diary() {
+    private Diary() {
         totalAttacks = new AtomicInteger(0);
         HanSoloFinish = 0;
         C3POFinish = 0;
