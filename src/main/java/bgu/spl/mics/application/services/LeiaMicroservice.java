@@ -38,7 +38,9 @@ public class LeiaMicroservice extends MicroService {
     protected void initialize() {
         try {
             SingletoneCountDownLatch.getInstance().wait();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            System.out.println("Error in waiting for setup. Terimnating all.");
+            sendBroadcast(new TerminationBroadcast());
         }
         List<Future> attackFutures = new LinkedList<>();
         Future shieldDeactivation;
