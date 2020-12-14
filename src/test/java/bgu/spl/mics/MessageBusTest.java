@@ -24,7 +24,6 @@ public class MessageBusTest {
 
     @BeforeEach
     public void setUp(){
-        Diary d = Diary.getInstance();
         LinkedList<Integer> list = new LinkedList<>();
         list.add(1);
         msgBus = MessageBusImpl.getInstance();
