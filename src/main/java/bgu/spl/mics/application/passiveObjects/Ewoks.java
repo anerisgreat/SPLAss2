@@ -3,6 +3,7 @@ package bgu.spl.mics.application.passiveObjects;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Passive object representing the resource manager.
@@ -13,7 +14,6 @@ import java.util.List;
  * You can add ONLY private methods and fields to this class.
  */
 public class Ewoks {
-    private static Ewoks ewoks;
     private static int numEwoks;
     private Ewok[] ewokArr;//need to make sure list is ordered by serialNumber
 
@@ -21,12 +21,13 @@ public class Ewoks {
         numEwoks = n;
     }
 
-    public synchronized static Ewoks getInstance() {
-        if (ewoks == null) {
-            ewoks = new Ewoks();
-        }
-        return ewoks;
+    private static class SingletonHolder {
+        private static Ewoks instance = new Ewoks();
     }
+    public static Ewoks getInstance() {
+        return SingletonHolder.instance;
+    }
+
 
     private Ewoks(){
         ewokArr = new Ewok[numEwoks];
