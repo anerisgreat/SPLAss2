@@ -1,10 +1,13 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.passiveObjects.SingletoneCountDownLatch;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -12,8 +15,6 @@ import java.util.LinkedList;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	private static MessageBus msgBus;
-
     //Members
     //Used to map each MicroService to their message queue.
     private ConcurrentHashMap<MicroService, ConcurrentLinkedQueue<Message>> microServiceToQueue;
@@ -30,12 +31,13 @@ public class MessageBusImpl implements MessageBus {
     //Used to remember to which boradcasts each microservice subscribed.
     private ConcurrentHashMap<MicroService, List<Class>> microServiceToBroadcastList;
 
-	public static MessageBus getInstance() {
-		if (msgBus == null) {
-			msgBus = new MessageBusImpl();
-		}
-		return msgBus;
- 	}
+
+    private static class SingletonHolder {
+        private static MessageBusImpl instance = new MessageBusImpl();
+    }
+    public static MessageBusImpl getInstance() {
+        return SingletonHolder.instance;
+    }
 
     private MessageBusImpl(){
         microServiceToQueue = new ConcurrentHashMap<MicroService, ConcurrentLinkedQueue<Message>>();
