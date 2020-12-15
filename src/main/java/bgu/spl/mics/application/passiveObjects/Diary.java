@@ -108,8 +108,5 @@ public class Diary {
     public long getR2D2Terminate() {
         return R2D2Terminate;
     }
-
-    public void resetNumberAttacks() {
-        totalAttacks.set(0);
-    }
+    
 }
