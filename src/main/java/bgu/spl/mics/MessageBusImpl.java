@@ -160,10 +160,8 @@ public class MessageBusImpl implements MessageBus {
 
         synchronized(mServiceQueue){
             //We wait until someone is subscribed. Otherwise, we could not send the message!
-            while(mServiceQueue.size() == 0){
-                try{
-                    mServiceQueue.wait();
-                }catch(InterruptedException ex){}
+            if(mServiceQueue.size() == 0){
+                return null;
             }
             //Retrieving microservice and adding to back.
             mService = mServiceQueue.poll();
